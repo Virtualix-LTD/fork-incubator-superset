@@ -25,7 +25,7 @@ on your machine (scroll down to find your operating system).
 You will also need to configure `helm` with a Chart repository, so that you can
 download the charts we will be using in this guide.
 
-```shell script
+```bash
 # Add the official Helm repository and update
 helm repo add stable https://kubernetes-charts.storage.googleapis.com/
 helm repo update
@@ -100,13 +100,13 @@ spec:
 
 And create the resource:
 
-```shell script
+```bash
 kubectl apply -f superset-sc-pvc.yaml
 ```
 
 Verify that the resources were created correctly by using `describe`:
 
-```shell script
+```bash
 kubectl describe storageclass ibmc-file-gold-superset
 kubectl describe pvc superset-pvc
 ```
@@ -120,18 +120,18 @@ We now have a Persistent Volume ready to be used by Superset. In the next
 section we will download and modify the official Helm chart to get our
 deployment running.
 
-## Modifying the Helm Chart
+### Modifying the Helm Chart
 
 Run the following command to download the Superset Chart locally:
 
-```shell script
+```bash
 helm pull stable/superset --untar
 ```
 
 You should now have a local directory named `superset` containing the
 Superset chart definition.
 
-```shell script
+```bash
 # Change to the Chart directory
 cd superset
 helm install \
@@ -160,7 +160,7 @@ Initially you can login with username/password: admin/admin.
 
 Initialization will take a few minutes. You can monitor the progress by watching the pod's logs:
 
-```shell script
+```bash
 kubectl get pods
 # Get the pod name. In this example it is `superset-798c9c7fbd-k9lsr`
 kubectl logs -f superset-798c9c7fbd-k9lsr
@@ -168,17 +168,17 @@ kubectl logs -f superset-798c9c7fbd-k9lsr
 
 You have now finished setup.
 
-## Set admin credentials
+### Set admin credentials
 
 Start a shell inside the Superset container
 
-```shell script
+```bash
 kubectl exec --stdin --tty superset-798c9c7fbd-k9lsr /bin/bash
 ```
 
 In the container shell, type the following to reset the admin credentials:
 
-```shell script
+```bash
 export FLASK_APP=superset
 flask fab create-admin superset
 ```
@@ -194,11 +194,11 @@ Admin User admin created.
 That means your admin credentials have been reset. You're ready to connect to
 the web UI.
 
-## Connect to Web UI
+### Connect to Web UI
 
 Finally, start a port-forwarding session via kubectl to connect to the login page.
 
-```shell script
+```bash
 kubectl port-forward svc/superset-demo 8080:9000
 ```
 
